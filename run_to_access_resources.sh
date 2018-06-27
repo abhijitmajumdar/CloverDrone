@@ -25,7 +25,8 @@ sudo cp ${BASEDIR}/hardware_files/*.rules /etc/udev/rules.d/
 #or do a sudo adduser <this user> <dialout/i2c/spi/gpio>
 
 # Configure stuff
-grep -v -e "dtparam=i2c" -e "dtparam=spi" /boot/config.txt > temp
+BOOTCONFIGFILE="/boot/config.txt"
+grep -v -e "dtparam=i2c" -e "dtparam=spi" ${BOOTCONFIGFILE} > temp
 echo "dtparam=i2c1_arm=on" >> temp
 echo "dtparam=i2c1_baudrate=400000" >> temp
 echo "dtparam=spi=on" >> temp

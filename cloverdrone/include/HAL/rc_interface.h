@@ -5,7 +5,7 @@
 #include "hardware_communication.h"
 
 #define N_BYTES 27
-#define FSTH9X
+#define FSR6B
 
 /*
 On the TGY-iA6 receiver
@@ -37,7 +37,25 @@ On the FS-TH9X receiver
   CH4: Yaw
   CH5: Gear
 */
-#ifdef FSTH9X
+#ifdef FSR6B
+enum{
+	CH_ROLL = 0,
+	CH_PITCH,
+	CH_THROTTLE,
+  CH_YAW,
+  CH_GEAR,
+  N_CHANNELS
+};
+
+/*
+On the FS-TH9X receiver
+  CH1: Left-Right/Roll
+  CH2: Up-Down/Pitch
+  CH3: Throttle
+  CH4: Yaw
+  CH5: Gear
+*/
+#ifdef FSR9B
 enum{
 	CH_ROLL = 0,
 	CH_PITCH,

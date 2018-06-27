@@ -26,13 +26,17 @@ void RadioControl::update()
 	}
 	else
 	{
+		size_t pos=0, ppos=0, idx=0;
 		std::string rcv_str = std::string((char*)rcv_bytes);
-		for(int i=0;i<N_CHANNELS;i++)
-		{
-			if(rcv_str.length()>0)
-			{
-				rcv_int[i] = std::stoi(rcv_str);
-				rcv_str.erase(0,5);
+		pos = rcv_str.find("\n");
+		if (pos!=std::string::npos){
+			std::string oneline = rcv_str.substr(0, pos);
+			pos = -1;
+			while(true & (idx<N_CHANNELS)){
+				pos = rcv_str.find("\t",pos+1);
+				if (pos==std::string::npos) break;
+				rcv_int[idx++] = std::stoi(rcv_str.substr(ppos, pos));
+				ppos = pos;
 			}
 		}
 		for(int i=0;i<N_CHANNELS;i++) value[i] = (rcv_int[i]>=1000) ? ( (rcv_int[i]<=2000) ? (float(rcv_int[i])/1000) : value_default[i] ) : value_default[i];
