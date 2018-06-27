@@ -46,6 +46,8 @@ enum{
   CH_GEAR,
   N_CHANNELS
 };
+const float value_default[N_CHANNELS] = {1.5,1.5,1.0,1.5,1.0};
+#endif
 
 /*
 On the FS-TH9X receiver
@@ -64,7 +66,7 @@ enum{
   CH_GEAR,
   N_CHANNELS
 };
-const float value_default[N_CHANNELS] = {1.468,1.480,1.0,1.478,1.0};
+const float value_default[N_CHANNELS] = {1.5,1.5,1.0,1.5,1.0};
 #endif
 
 class RadioControl
