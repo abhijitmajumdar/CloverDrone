@@ -40,8 +40,8 @@ class Stabilize
     // Flow control
     bool is_running, armed;
     uint64_t system_time;
-    uint64_t compute_time, motor_time, arming_time;
-    uint64_t compute_time_limit, motor_time_limit, arming_time_limit;
+    uint64_t sense_time, compute_time, motor_time, arming_time;
+    uint64_t sense_time_limit, compute_time_limit, motor_time_limit, arming_time_limit;
     // Control and Sensing variables
     qPIDvariables vPhi,vTheta,vGamma; // vPhi->Roll, vTheta->Pitch, vGamma->Yaw
     qMotorThrust vMotor;

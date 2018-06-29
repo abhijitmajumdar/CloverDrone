@@ -3,6 +3,7 @@
 #include <math.h>
 
 Stabilize::Stabilize(int spawn_on_core, std::string imu_config_location) : is_running(true),compute_time(0),motor_time(0),arming_time(0),armed(false),
+    sense_time_limit(qConstants["TIME_TO_SENSE"]),
     compute_time_limit(qConstants["TIME_TO_COMPUTE"]),
     motor_time_limit(qConstants["TIME_TO_UPDATEMOTOR"]),
     arming_time_limit(qConstants["TIME_TO_ARM"])
@@ -70,9 +71,13 @@ void Stabilize::stabilizer_routine(int run_on_core)
     time_mutex.lock();
 		this->system_time = RTMath::currentUSecsSinceEpoch();
     time_mutex.unlock();
-    if (check_time(compute_time,compute_time_limit))
+    if (check_time(sense_time,sense_time_limit))
     {
       Sensor::IMU_update();
+      sense_time = this->system_time;
+    }
+    if (check_time(compute_time,compute_time_limit))
+    {
       this->imud = Sensor::IMU_data();
       this->quadController->compute();
       compute_time = this->system_time;
