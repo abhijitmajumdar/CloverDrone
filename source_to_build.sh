@@ -91,7 +91,7 @@ case ${OPTION_TO_BUILD} in
     else
       cd ${CLOVERDRONEDIR}/cloverdrone/build
     fi
-    make
+    make -j
     cd ${CLOVERDRONEDIR}/cloverdrone_ros_ws
     if [[ (-d build) || (-d devel) || (-e src/CMakeLists.txt) ]]; then
       rm -rf build devel src/CMakeLists.txt
