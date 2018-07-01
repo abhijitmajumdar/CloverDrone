@@ -4,7 +4,7 @@
 #include <iostream>
 #include "hardware_communication.h"
 
-#define N_BYTES 27
+#define N_BYTES 30
 #define FSR6B
 
 /*

@@ -16,7 +16,7 @@ ROSInterface::~ROSInterface()
   delete n;
 }
 
-ROSInterface::load_defaults()
+void ROSInterface::load_defaults()
 {
   this->arming = false;
   this->throttle = 1.0;
