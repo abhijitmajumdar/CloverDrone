@@ -1,6 +1,6 @@
 #include "rc_interface.h"
 
-RadioControl::RadioControl(std::string device_name="/dev/ttyUSB0") : request('#'),timeout(10)
+RadioControl::RadioControl(std::string device_name="/dev/ttyUSB0") : request('#'),attempts(1)
 {
 	serial = new Serial(device_name,115200);
 	load_defaults();
@@ -13,35 +13,28 @@ void RadioControl::load_defaults()
 
 void RadioControl::update()
 {
-	do{
-		serial->flush();
-		serial->send(request);
-		serial->send(request);
-		attempts += 1;
-		if (attempts>timeout) break;
-	} while(!serial->receive(rcv_bytes,N_BYTES));
-	if (attempts>timeout)
-	{
+	serial->flush();
+	serial->send(request);
+	serial->receive(rcv_bytes,N_BYTES,attempts);
+	std::string rcv_str = std::string((char*)rcv_bytes);
+	size_t pos_start=0, pos_stop=0, idx=0;
+	pos_start = rcv_str.find("!@");
+	pos_stop = rcv_str.find("#");
+	if ((pos_start!=std::string::npos) & (pos_stop!=std::string::npos) & (pos_start<pos_stop)){
+		std::string oneline = rcv_str.substr(pos_start+2, pos_stop-pos_start-2);
+		pos_start = -1;
+		pos_stop = 0;
+		while(idx<N_CHANNELS){
+			pos_start = oneline.find(",",pos_start+1);
+			if (pos_start==std::string::npos) break;
+			rcv_int[idx++] = std::stoi(oneline.substr(pos_stop, pos_start-pos_stop));
+			pos_stop = pos_start+1;
+		}
+		for(int i=0;i<N_CHANNELS;i++) value[i] = (rcv_int[i]>=500) ? ( (rcv_int[i]<=2500) ? (float(rcv_int[i])/1000) : value_default[i] ) : value_default[i];
+	}
+	else{
 		load_defaults();
 	}
-	else
-	{
-		size_t pos=0, ppos=0, idx=0;
-		std::string rcv_str = std::string((char*)rcv_bytes);
-		pos = rcv_str.find("\n");
-		if (pos!=std::string::npos){
-			std::string oneline = rcv_str.substr(0, pos);
-			pos = -1;
-			while(true & (idx<N_CHANNELS)){
-				pos = rcv_str.find("\t",pos+1);
-				if (pos==std::string::npos) break;
-				rcv_int[idx++] = std::stoi(rcv_str.substr(ppos, pos));
-				ppos = pos;
-			}
-		}
-		for(int i=0;i<N_CHANNELS;i++) value[i] = (rcv_int[i]>=1000) ? ( (rcv_int[i]<=2000) ? (float(rcv_int[i])/1000) : value_default[i] ) : value_default[i];
-	}
-	attempts=0;
 }
 
 void RadioControl::print_values()

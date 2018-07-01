@@ -110,6 +110,11 @@ source cloverdrone_ros_ws/devel/setup.sh
 
 
  ## Changes
+ - fixed pitch inversion
+ - fixed default values for RC
+ - fixed RC interface to read data from USB properly
+ - fixed scaling in utils
+ - forgot prototype for load_defaults() in ros
  - added TIME_TO_SENSE in ros config and necessary params to check
  - changed Kp values in both config
  - removed rosbuild type from cmake (we're using catkin_make)

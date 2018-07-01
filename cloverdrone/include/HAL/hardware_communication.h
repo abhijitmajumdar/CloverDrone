@@ -10,7 +10,7 @@ class HardwareCommunication{
     ~HardwareCommunication();
     bool device_open();
     void device_close();
-    bool read_seq(uint8_t *, uint8_t);
+    uint8_t read_seq(uint8_t *, uint8_t);
     bool write_seq(uint8_t * data, uint8_t len);
     bool is_open() {return device_descriptor>=0;}
     void report_error(std::string);
@@ -26,7 +26,7 @@ class Serial : public HardwareCommunication{
     bool send(uint8_t);
     bool send(unsigned char*, uint8_t);
     bool send(std::string);
-    bool receive(unsigned char*, uint8_t);
+    bool receive(unsigned char*, uint8_t, uint8_t attempts=1);
     void flush(void);
   private:
     unsigned int baud;

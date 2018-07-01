@@ -44,10 +44,10 @@ bool HardwareCommunication::write_seq(uint8_t * data, uint8_t len)
   return (write(device_descriptor, data, len) == len);
 }
 
-bool HardwareCommunication::read_seq(uint8_t * data, uint8_t len)
+uint8_t HardwareCommunication::read_seq(uint8_t * data, uint8_t len)
 {
   if (!is_open()) return false;
-  return (read(device_descriptor, data, len) == len);
+  return read(device_descriptor, data, len);
 }
 
 
@@ -96,9 +96,15 @@ bool Serial::send(std::string data)
   return write_seq((unsigned char*)_data, len);
 }
 
-bool Serial::receive(unsigned char* data, uint8_t len)
+bool Serial::receive(unsigned char* data, uint8_t len, uint8_t attempts)
 {
-  return read_seq(data, len);
+  //ioctl already has a timeout defined
+  uint8_t original_length = len;
+  while((len>0) & (attempts>0)){
+    len -= read_seq(&data[original_length-len], len);
+    attempts--;
+  }
+  return (len==0);
 }
 
 void Serial::flush(void)
@@ -148,5 +154,5 @@ bool I2C::send(std::string data, uint8_t reg_address)
 bool I2C::receive(unsigned char* data, uint8_t len, uint8_t reg_address)
 {
   if (!write_seq(&reg_address, 1)) return false;
-  return read_seq(data, len);
+  return (read_seq(data, len)==len);
 }

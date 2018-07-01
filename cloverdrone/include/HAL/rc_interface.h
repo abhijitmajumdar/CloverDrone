@@ -82,7 +82,7 @@ class RadioControl
     char request;
     unsigned char rcv_bytes[N_BYTES];
     int rcv_int[N_CHANNELS];
-		unsigned int attempts,timeout;
+		unsigned int attempts;
 };
 
 #endif //_RCINTERFACE_H

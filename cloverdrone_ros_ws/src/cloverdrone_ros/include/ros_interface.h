@@ -18,6 +18,7 @@ class ROSInterface{
     float throttle;
     float target_pose[3];
   private:
+    void load_defaults();
     //float imu_data[9];
     ros::NodeHandle *n;
     ros::Subscriber sub_target;

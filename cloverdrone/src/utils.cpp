@@ -63,7 +63,7 @@ Min-Max scaling
 */
 float Utils::scale(float* v, float* v_min, float* v_max, float* c_min, float* c_max)
 {
-  return (*v) * (*c_max-*c_min)/(*v_max-*v_min);
+  return ((*v-*v_min) * (*c_max-*c_min)/(*v_max-*v_min))+(*c_min);
 }
 
 /*

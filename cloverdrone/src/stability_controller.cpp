@@ -105,7 +105,7 @@ void Stabilize::stabilizer_routine(int run_on_core)
 void Stabilize::set_targets(float _throttle, float _theta, float _phi, float _gamma)
 {
   vTarget.throttle = _throttle;
-  vTarget.theta = _theta;
+  vTarget.theta = -(_theta);
   vTarget.phi = _phi;
   vTarget.gamma = _gamma;
 }
