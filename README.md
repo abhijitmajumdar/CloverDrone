@@ -1,18 +1,19 @@
 # CloverDrone
-This project contains a standalone package to provide stable flight to a quadcopter, using inputs from Radio Control(RC), tested on a Raspberry Pi 2 and 3. It also provides a ROS workspace which contains packages to use the standalone flight stabilizer package within ROS based package, hence integrating communication over ROS, and corresponding interface. Scripts are provided to facilitate the build of the packages, configuring of ROS variables, and configuration of hardware on the Raspberry Pi.
+This project contains a standalone package to provide stable flight to a quadcopter, using inputs from Radio Control(RC), tested on a Raspberry Pi 2 and 3 (RPi). It also provides a ROS workspace which contains packages to use the standalone flight stabilizer package within ROS based package, hence integrating communication over ROS, and corresponding interface. Scripts are provided to facilitate the build of the packages, configuring of ROS variables, and configuration of hardware on the Raspberry Pi.
+
+This project is an extension of my previous work (https://github.com/abhijitmajumdar/quadController.git), and uses the same core isolation method to enable a high performance controller while still sparing enough resources to perform other tasks on a RPi.
 
 ## Requirements
 - GCC
 - Make
 - CMake
-- pkg-config
 - Git
 - ROS (optional)
 - RTIMULib (included as a submodule in this repository)
 
 If using ROS, make sure it is installed on the device. You could use the following to install the other dependencies on the Raspberry Pi:
 ```sh
-sudo apt-get install build-essential cmake git pkg-config libi2c-dev
+sudo apt-get install build-essential cmake git libi2c-dev
 ```
 
 ## Usage
@@ -62,6 +63,13 @@ source cloverdrone_ros_ws/devel/setup.sh
 ```
 
 ## Details
+#### Components
+- Sensing: The package uses *RTIMULib*, to interface with IMU, configured to interface over the SPI bus with the RPi. *RTIMULib* is an excellent library to interface with IMU(s) and process data with sensor fusion, with support for a broad variety of devices. This provides the flexibility to use other sensors if needed. For this project the MPU9250 was used over SPI bus 0.
+
+- Actuation: Interface to the brushless motors was performed using a PCA9685 PWM driver, connected to the Electronic Speed Controllers (ESC) to each motor.
+
+- Communication: The RC receiver signals are interpreted by an Arduino Nano and communicated over to the RPi over USB serial interface. ROS can also be configured (a script provides general configurations) to communicate over wireless network to receive commands and send status to the ROS master. We use a WiFi module for this project.
+
 #### (Re)building
  When making changes to the source files, the build script `source_to_build.sh`, provides arguments that can be passed to it to (re)build only parts of the project. In the project, *cloverdrone_ros* build packages are dependent on *cloverdrone* package build, which is in-turn dependent on *RTIMULib* build. As a result any changes made to the top of the hierarchy will only be reflected onto the lower builds when recompiled. This organization structure is pre-defined in the *CMake* files as well as the *build script*, which can be leveraged using arguments to the file. It should be noted that the ROS packages are only built if a valid installation of ROS is found in the system. Some examples are provided below:
  ```sh
@@ -109,7 +117,7 @@ source cloverdrone_ros_ws/devel/setup.sh
  ```
 
 
- ## Changes
+ ### Changes
  - fixed pitch inversion
  - fixed default values for RC
  - fixed RC interface to read data from USB properly
