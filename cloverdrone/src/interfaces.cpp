@@ -15,7 +15,7 @@ Communication::~Communication()
 
 void Communication::update(uint64_t system_time)
 {
-  if (((system_time-rc_update_time)>=qConstants["TIME_TO_GET_RCUSB"]) & (mode==COMBINED | mode==RC))
+  if (((system_time-rc_update_time)>=qConstants["TIME_TO_GET_RCUSB"]) & (mode==RC))
   {
     rc->update();
     rc_commands.throttle = Utils::scale(&(rc->value[CH_THROTTLE]), &qConstants["CH_THROTTLE_MIN_CALIBRATE"], &qConstants["CH_THROTTLE_MAX_CALIBRATE"],&TH_MIN,&TH_MAX);

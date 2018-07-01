@@ -107,3 +107,12 @@ source cloverdrone_ros_ws/devel/setup.sh
  cd ~/CloverDrone
  source source_to_build.sh cloverdrone --noros
  ```
+
+
+ ## Changes
+ - added TIME_TO_SENSE in ros config and necessary params to check
+ - changed Kp values in both config
+ - removed rosbuild type from cmake (we're using catkin_make)
+ - added a load_defaults() for ros_interface
+ - added gitignore
+ - Refer Changes section in readme for detailed information on each commit

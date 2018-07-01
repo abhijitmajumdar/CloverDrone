@@ -41,6 +41,7 @@ int main(int argc, char **argv)
 		if (qConstants["DEBUG"])
 		{
 			base_controller->print_pose();
+			base_controller->print_motor();
 			interfaces->print_commands();
 		}
 		Utils::sleep(20);

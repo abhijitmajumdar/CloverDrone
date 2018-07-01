@@ -8,11 +8,21 @@ ROSInterface::ROSInterface(int _argc,char** _argv)
   //pub_status = n->advertise<cloverdrone_ros_msgs::DroneStatus>("status", 10);
   // Maybe use ros timers here (http://wiki.ros.org/roscpp/Overview/Timers)
   // or give an option to do so, like an argument
+  load_defaults();
 }
 
 ROSInterface::~ROSInterface()
 {
   delete n;
+}
+
+ROSInterface::load_defaults()
+{
+  this->arming = false;
+  this->throttle = 1.0;
+  this->target_pose[0] = 0;
+  this->target_pose[1] = 0;
+  this->target_pose[2] = 0;
 }
 
 void ROSInterface::target_update(const cloverdrone_ros_msgs::DroneTarget::ConstPtr& msg)
@@ -28,4 +38,13 @@ void ROSInterface::update()
 {
   ros::spinOnce();
 }
-void ROSInterface::print_values(){;}
+void ROSInterface::print_values()
+{
+  std::cout<<"ROS commands(armed,th,roll,pitch,yaw): ";
+  std::cout<< this->arming << '\t';
+  std::cout<< this->throttle << '\t';
+  std::cout<< this->target_pose[0] << '\t';
+  std::cout<< this->target_pose[1] << '\t';
+  std::cout<< this->target_pose[2] << '\t';
+  std::cout<< '\n';
+}

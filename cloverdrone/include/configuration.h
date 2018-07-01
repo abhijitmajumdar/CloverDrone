@@ -21,7 +21,7 @@ extern std::map<std::string,float> qConstants;
 Make sure these parameters are defined in the config file
 */
 static std::list<std::string> necessary_constants = {
-	"TIME_TO_COMPUTE", "TIME_TO_UPDATEMOTOR", "TIME_TO_ARM", "I_THROTTLE_TRIGGER", "PD_THROTTLE_TRIGGER",
+	"TIME_TO_COMPUTE", "TIME_TO_SENSE", "TIME_TO_UPDATEMOTOR", "TIME_TO_ARM", "I_THROTTLE_TRIGGER", "PD_THROTTLE_TRIGGER",
 	"YAW_PA", "YAW_P", "YAW_I", "YAW_D", "ROLL_PA", "ROLL_P", "ROLL_I", "ROLL_D", "PITCH_PA", "PITCH_P", "PITCH_I", "PITCH_D",
 	"CH_THROTTLE_MIN_CALIBRATE", "CH_THROTTLE_MAX_CALIBRATE",
 	"CH_PITCH_CALIBRATE", "CH_ROLL_CALIBRATE", "CH_YAW_CALIBRATE", "CH_GEAR_CALIBRATE",

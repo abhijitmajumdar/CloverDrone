@@ -1,0 +1,7 @@
+#### User Flies ####
+**/devel/
+**/build/
+**/bin/
+**/lib/
+cloverdrone_ros_ws/src/CMakeLists.txt
+todo.txt
