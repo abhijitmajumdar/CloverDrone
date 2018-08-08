@@ -6,6 +6,11 @@ WORKDIR=`pwd`
 cd $(dirname "$BASH_SOURCE")
 BASEDIR=`pwd`
 
+if [ -z ${SUDO_USER} ]; then
+  echo "Please run with sudo(as root)"
+  exit
+fi
+
 echo 'Configuring access to hardware peripherals (USB/I2C/SPI/GPIO)'
 # Enabling i2c,spi,gpio on RPi
 if [ -z `grep -Fx "i2c-dev" /etc/modules` ]; then
@@ -21,7 +26,7 @@ grep -v -e "blacklist i2c-bcm2708" -e "blacklist spi-bcm2708" /etc/modprobe.d/ra
 sudo mv temp /etc/modprobe.d/raspi-blacklist.conf
 
 # Non-sudo access to harware peripherals
-sed 's@{USER}@'"${USER}"'@g' ${BASEDIR}/hardware_files/999-perif-i2c-spi-serial-gpio.rules.copy > ${BASEDIR}/hardware_files/999-perif-i2c-spi-serial-gpio.rules
+sed 's@{USER}@'"${SUDO_USER}"'@g' ${BASEDIR}/hardware_files/999-perif-i2c-spi-serial-gpio.rules.copy > ${BASEDIR}/hardware_files/999-perif-i2c-spi-serial-gpio.rules
 sudo cp ${BASEDIR}/hardware_files/*.rules /etc/udev/rules.d/
 
 # Configure stuff

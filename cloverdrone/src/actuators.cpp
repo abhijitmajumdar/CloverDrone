@@ -4,26 +4,23 @@
 
 static PCA9685* motors;
 static GPIO* motors_en;
-static GPIO* led_blue;
-static GPIO* led_amber;
+static GPIO* led;
 
-void Actuator::initialize(std::string device)
+void Actuator::initialize(std::string device, int motors_enable_pin, int status_led_pin)
 {
 	motors = new PCA9685(device,0x40,50);
-	motors_en = new GPIO(PWM_EN, OUT);
-	led_blue = new GPIO(BLUE, OUT);
-	led_amber = new GPIO(AMBER, OUT);
+	motors_en = new GPIO(motors_enable_pin, OUT);
+	led = new GPIO(status_led_pin, OUT);
 }
 
 void Actuator::motors_engage(bool enable)
 {
 	motors_en->set(!enable);
-	led_blue->set(!enable);
 }
 
 void Actuator::status_led(bool enable)
 {
-	led_amber->set(!enable);
+	led->set(!enable);
 }
 
 void Actuator::set_motors(float m1, float m2, float m3, float m4)
@@ -38,6 +35,5 @@ void Actuator::deinitialize(void)
 {
 	delete motors;
 	delete motors_en;
-	delete led_blue;
-	delete led_amber;
+	delete led;
 }

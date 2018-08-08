@@ -9,7 +9,7 @@ Stabilize::Stabilize() : is_running(true),compute_time(0),motor_time(0),arming_t
     arming_time_limit(qConstants.values["TIME_TO_ARM"])
 {
 	Sensor::initialize(qConstants.defines["IMU_DEVICE"]);
-	Actuator::initialize(qConstants.defines["PWM_DEVICE"]);
+	Actuator::initialize(qConstants.defines["PWM_DEVICE"],qConstants.values["MOTOR_EN"],qConstants.values["LED"]);
 	load_parameters();
 	quadController = new qControl(&vPhi, &vTheta, &vGamma, &vMotor, &imud, &vTarget, qConstants.values["I_THROTTLE_TRIGGER"], qConstants.values["PD_THROTTLE_TRIGGER"]);
 	Actuator::set_motors(vMotor.mMinBound, vMotor.mMinBound, vMotor.mMinBound, vMotor.mMinBound);

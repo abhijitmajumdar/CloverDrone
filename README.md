@@ -118,25 +118,28 @@ When making changes to the source files, the build script `source_to_build.sh`, 
 
 
 ### Changes
- - removed the need for RTIMULib.ini file, and hard coded the desired values into the settings, declaring an overriding class. Check cloverdrone/src/sensors.cpp
- - reorganized the config.ini structure completely
- - the config file is now a config.ini file, which can also be parsed as an argument to the main program, if not it checks the CLOVERDRONEDIR env variable for a config.ini file
- - the comm devices are now defined as a necessary parameter in the config file
- - changed the configuration module to work with comments(#),spaces,tabs,empty lines etc. It now supports numeric values(int/float), flags(boolean true/false) and defines(string values) which is automatically detected and stored into corresponding maps. Access example: qConstants.flags["PARAM"]
- - added parameters to class constructors to define the comm devices for peripherals (i2c,spi,serial), to be used in main
- - changed to create a 'SHARED' library instead of a 'STATIC' library
- - add '-j2' to catkin_make in the build script, since with more cores, npi doesnt have enough memory to compile everything simultaneously
- - changes to udev rules to factor in nanopi, more generalized rules for non-sudo access, by assigning the current user group (NOTE: make sure the current user is a sudoer, check the file /etc/sudoers)
- - add an option to configure the CLOVERDRONEDIR variable and ros workspace in the build script
- - removed "#include <linux/i2c.h>" from "hardware_communication.cpp"
- - fixed pitch inversion
- - fixed default values for RC
- - fixed RC interface to read data from USB properly
- - fixed scaling in utils
- - forgot prototype for load_defaults() in ros
- - added TIME_TO_SENSE in ros config and necessary params to check
- - changed Kp values in both config
- - removed rosbuild type from cmake (we're using catkin_make)
- - added a load_defaults() for ros_interface
- - added gitignore
- - Refer Changes section in readme for detailed information on each commit
+- separate configuration files for use on raspberry pi and nanopi duo
+- configurable access to pins to enable motor and status led
+- fixed rules file naming and sudo_user error in the script to configure non-root access
+- removed the need for RTIMULib.ini file, and hard coded the desired values into the settings, declaring an overriding class. Check cloverdrone/src/sensors.cpp
+- reorganized the config.ini structure completely
+- the config file is now a config.ini file, which can also be parsed as an argument to the main program, if not it checks the CLOVERDRONEDIR env variable for a config.ini file
+- the comm devices are now defined as a necessary parameter in the config file
+- changed the configuration module to work with comments(#),spaces,tabs,empty lines etc. It now supports numeric values(int/float), flags(boolean true/false) and defines(string values) which is automatically detected and stored into corresponding maps. Access example: qConstants.flags["PARAM"]
+- added parameters to class constructors to define the comm devices for peripherals (i2c,spi,serial), to be used in main
+- changed to create a 'SHARED' library instead of a 'STATIC' library
+- add '-j2' to catkin_make in the build script, since with more cores, npi doesnt have enough memory to compile everything simultaneously
+- changes to udev rules to factor in nanopi, more generalized rules for non-sudo access, by assigning the current user group (NOTE: make sure the current user is a sudoer, check the file /etc/sudoers)
+- add an option to configure the CLOVERDRONEDIR variable and ros workspace in the build script
+- removed "#include <linux/i2c.h>" from "hardware_communication.cpp"
+- fixed pitch inversion
+- fixed default values for RC
+- fixed RC interface to read data from USB properly
+- fixed scaling in utils
+- forgot prototype for load_defaults() in ros
+- added TIME_TO_SENSE in ros config and necessary params to check
+- changed Kp values in both config
+- removed rosbuild type from cmake (we're using catkin_make)
+- added a load_defaults() for ros_interface
+- added gitignore
+- Refer Changes section in readme for detailed information on each commit
