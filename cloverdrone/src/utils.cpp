@@ -71,8 +71,8 @@ Return the package path configured as an environment variable
 */
 std::string Utils::get_configfile_path()
 {
-  if(const char* env_p = std::getenv("CLOVERDRONEDIR")) return std::string(env_p);
-  else Utils::throw_error("Please export CLOVERDRONEDIR environment variable");
+  if(const char* env_p = std::getenv("CLOVERDRONEDIR")) return std::string(env_p).append("/config.ini");
+  else Utils::throw_error("Please export CLOVERDRONEDIR environment variable or provide path to configuration file as argument");
 }
 
 /*
@@ -81,4 +81,31 @@ Error reporting
 void Utils::throw_error(std::string error)
 {
   throw std::runtime_error(error);
+}
+
+/*
+String split by delimiter, returns a vector of split strings
+*/
+std::vector<std::string> Utils::split_str(std::string str, std::string delimiter)
+{
+  std::vector<std::string> list;
+  size_t pos_begin = 0;
+  size_t pos_end = str.find(delimiter);
+  while (pos_end != std::string::npos) {
+    list.push_back(str.substr(pos_begin, pos_end - pos_begin));
+    pos_begin = pos_end + delimiter.length();
+    pos_end = str.find(delimiter,pos_begin);
+  }
+  list.push_back(str.substr(pos_begin));
+  return list;
+}
+
+/*
+Split string using delimiter and return last string, returns "" if no split found
+*/
+std::string Utils::last_in_str(std::string str, std::string delimiter)
+{
+  size_t pos = str.rfind(delimiter);
+	if(pos==std::string::npos) return "";
+  return str.substr(pos+delimiter.length(),std::string::npos-pos);
 }

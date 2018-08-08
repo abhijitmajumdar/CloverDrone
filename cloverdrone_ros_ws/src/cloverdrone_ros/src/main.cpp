@@ -23,9 +23,9 @@ int main(int argc, char **argv)
   std::cout<<"\n\nCloverDrone ROS\n";
 	Utils::ctrl_c_exit(prepare_exit);
 	std::string packagepath = ros::package::getPath("cloverdrone_ros");
-	Configuration::read_config_file(packagepath+"/configurations");
+	Configuration::read_config_file(packagepath+"/configurations/config.ini");
   CommunicationROS *interfaces = new CommunicationROS(argc, argv);
-	base_controller = new Stabilize(3,packagepath+"/configurations");
+	base_controller = new Stabilize();
 	while(base_controller->running() & interfaces->check_ros())
   {
 		// Communication
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 		// Arming
     base_controller->arm(interfaces->commands.arming);
     // Debug
-		if (qConstants["DEBUG"])
+		if (qConstants.flags["DEBUG"])
 		{
 			base_controller->print_pose();
 			base_controller->print_motor();

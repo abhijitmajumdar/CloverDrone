@@ -19,17 +19,17 @@ bool CommunicationROS::check_ros()
 
 void CommunicationROS::update(uint64_t system_time)
 {
-  if (((system_time-rc_update_time)>=qConstants["TIME_TO_GET_RCUSB"]) & (mode==COMBINED | mode==RC))
+  if (((system_time-rc_update_time)>=qConstants.values["TIME_TO_GET_RCUSB"]) & (mode==COMBINED | mode==RC))
   {
     rc->update();
-    rc_commands.throttle = Utils::scale(&(rc->value[CH_THROTTLE]), &qConstants["CH_THROTTLE_MIN_CALIBRATE"], &qConstants["CH_THROTTLE_MAX_CALIBRATE"],&TH_MIN,&TH_MAX);
-    rc_commands.roll = rc->value[CH_ROLL]-qConstants["CH_ROLL_CALIBRATE"];
-    rc_commands.pitch = rc->value[CH_PITCH]-qConstants["CH_PITCH_CALIBRATE"];
-    rc_commands.yaw = rc->value[CH_YAW]-qConstants["CH_YAW_CALIBRATE"];
-    rc_commands.arming = (rc->value[CH_GEAR]>qConstants["CH_GEAR_CALIBRATE"])?true:false;
+    rc_commands.throttle = Utils::scale(&(rc->value[CH_THROTTLE]), &qConstants.values["CH_THROTTLE_MIN_CALIBRATE"], &qConstants.values["CH_THROTTLE_MAX_CALIBRATE"],&TH_MIN,&TH_MAX);
+    rc_commands.roll = rc->value[CH_ROLL]-qConstants.values["CH_ROLL_CALIBRATE"];
+    rc_commands.pitch = rc->value[CH_PITCH]-qConstants.values["CH_PITCH_CALIBRATE"];
+    rc_commands.yaw = rc->value[CH_YAW]-qConstants.values["CH_YAW_CALIBRATE"];
+    rc_commands.arming = (rc->value[CH_GEAR]>qConstants.values["CH_GEAR_CALIBRATE"])?true:false;
     rc_update_time = system_time;
   }
-  if (((system_time-ros_update_time)>=qConstants["TIME_TO_ROS_SPIN"]) & (mode==COMBINED | mode==ROS))
+  if (((system_time-ros_update_time)>=qConstants.values["TIME_TO_ROS_SPIN"]) & (mode==COMBINED | mode==ROS))
   {
     ros_interface->update();
     ros_commands.throttle = ros_interface->throttle;

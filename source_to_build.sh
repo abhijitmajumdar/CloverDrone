@@ -25,7 +25,7 @@ unset REBUILD
 
 # Check if build component defined
 if [[ $1 ]]; then
-  if [[ $1 =~ ^(clean|all|imu|cloverdrone|ros)$ ]]; then
+  if [[ $1 =~ ^(clean|all|imu|cloverdrone|ros|config)$ ]]; then
     OPTION_TO_BUILD="${1}"
   fi
 fi
@@ -106,8 +106,13 @@ case ${OPTION_TO_BUILD} in
         fi
       fi
       cd ${CLOVERDRONEDIR}/cloverdrone_ros_ws
-      catkin_make
+      catkin_make -j2
       source devel/setup.sh
+    fi
+    ;;
+  "config")
+    if [[ ($ROSEXISTS) && ( -z $NOROS ) && (-d ${CLOVERDRONEDIR}/cloverdrone_ros_ws/devel) ]]; then
+      source ${CLOVERDRONEDIR}/cloverdrone_ros_ws/devel/setup.sh
     fi
     ;;
   *)

@@ -8,7 +8,6 @@ extern "C" {
 #include <iostream>
 #include <string.h>
 #include <stdexcept>
-#include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
 HardwareCommunication::HardwareCommunication(std::string device) : devicename(device),device_descriptor(-1)

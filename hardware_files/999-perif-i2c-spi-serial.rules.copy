@@ -1,0 +1,8 @@
+KERNEL=="i2c-[0-9]*", OWNER="{USER}", MODE="0660"
+KERNEL=="spidev[0-1]*", OWNER="{USER}",MODE="0660"
+KERNEL=="ttyS[1-7]*", OWNER="{USER}", MODE="0660"
+KERNEL=="ttyACM[0-9]*", OWNER="{USER}", MODE="0660"
+KERNEL=="ttyAMA[0-9]*", OWNER="{USER}", MODE="0660"
+KERNEL=="ttyUSB[0-9]*", OWNER="{USER}", MODE="0660"
+KERNEL=="gpio*", PROGRAM="/bin/sh -c 'sudo chown -R {USER}:{USER} /sys/class/gpio && sudo chmod -R 770 /sys/class/gpio && sudo chgrp {USER} /sys/devices/virtual/gpio'"
+SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'sudo chown -R {USER}:{USER} /sys%p'"

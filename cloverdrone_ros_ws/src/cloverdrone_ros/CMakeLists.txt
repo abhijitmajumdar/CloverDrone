@@ -38,7 +38,7 @@ include_directories(
 
 set(LIBS
   ${PROJECT_SOURCE_DIR}/../../../RTIMULib/RTIMULib/build/libRTIMULib.so
-  ${PROJECT_SOURCE_DIR}/../../../cloverdrone/lib/libcloverdrone.a
+  ${PROJECT_SOURCE_DIR}/../../../cloverdrone/lib/libcloverdrone.so
   ${catkin_LIBRARIES}
   pthread
 )

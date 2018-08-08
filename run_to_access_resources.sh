@@ -21,8 +21,8 @@ grep -v -e "blacklist i2c-bcm2708" -e "blacklist spi-bcm2708" /etc/modprobe.d/ra
 sudo mv temp /etc/modprobe.d/raspi-blacklist.conf
 
 # Non-sudo access to harware peripherals
+sed 's@{USER}@'"${USER}"'@g' ${BASEDIR}/hardware_files/999-perif-i2c-spi-serial-gpio.rules.copy > ${BASEDIR}/hardware_files/999-perif-i2c-spi-serial-gpio.rules
 sudo cp ${BASEDIR}/hardware_files/*.rules /etc/udev/rules.d/
-#or do a sudo adduser <this user> <dialout/i2c/spi/gpio>
 
 # Configure stuff
 BOOTCONFIGFILE="/boot/config.txt"

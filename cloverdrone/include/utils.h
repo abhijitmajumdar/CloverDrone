@@ -2,6 +2,7 @@
 #define _UTILS_H_
 
 #include <iostream>
+#include <vector>
 
 #define USE_USLEEP
 
@@ -12,6 +13,8 @@ namespace Utils{
   float scale(float*,float*,float*,float*,float*);
   std::string get_configfile_path();
   void throw_error(std::string);
+  std::vector<std::string> split_str(std::string str, std::string delimiter);
+  std::string last_in_str(std::string str, std::string delimiter);
 }
 
 #endif //_UTILS_H_

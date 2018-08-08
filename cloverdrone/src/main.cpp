@@ -19,10 +19,13 @@ void prepare_exit(int s)
 int main(int argc, char **argv)
 {
 	std::cout<<"\n\nCloverDrone\n";
+	// Properly exit on ctrl+c
 	Utils::ctrl_c_exit(prepare_exit);
-	std::string packagepath = Utils::get_configfile_path();
-	Configuration::read_config_file(packagepath);
-	base_controller = new Stabilize(3,packagepath);
+	// Load configuration
+	std::string configuration_file = (argc>1)?argv[1]:Utils::get_configfile_path();
+	Configuration::read_config_file(configuration_file);
+	// Load modules
+	base_controller = new Stabilize();
 	Communication *interfaces = new Communication();
 	while(base_controller->running())
   {
@@ -36,7 +39,7 @@ int main(int argc, char **argv)
 		// Arming
     base_controller->arm(interfaces->commands.arming);
     // Debug
-		if (qConstants["DEBUG"])
+		if (qConstants.flags["DEBUG"])
 		{
 			base_controller->print_pose();
 			base_controller->print_motor();

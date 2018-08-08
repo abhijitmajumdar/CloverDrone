@@ -66,12 +66,12 @@ source cloverdrone_ros_ws/devel/setup.sh
 #### Components
 - Sensing: The package uses *RTIMULib*, to interface with IMU, configured to interface over the SPI bus with the RPi. *RTIMULib* is an excellent library to interface with IMU(s) and process data with sensor fusion, with support for a broad variety of devices. This provides the flexibility to use other sensors if needed. For this project the MPU9250 was used over SPI bus 0.
 
-- Actuation: Interface to the brushless motors was performed using a PCA9685 PWM driver, connected to the Electronic Speed Controllers (ESC) to each motor.
+- Actuation: Interface to the brushless motors was performed using a PCA9685 PWM driver, connected to the Electronic Speed Controllers (ESC) to each motor. Interface to the PCA9685 is performed over the I2C bus 1. GPIO interfaces are also used to trigger the enable on the PCA9685.
 
 - Communication: The RC receiver signals are interpreted by an Arduino Nano and communicated over to the RPi over USB serial interface. ROS can also be configured (a script provides general configurations) to communicate over wireless network to receive commands and send status to the ROS master. We use a WiFi module for this project.
 
 #### (Re)building
- When making changes to the source files, the build script `source_to_build.sh`, provides arguments that can be passed to it to (re)build only parts of the project. In the project, *cloverdrone_ros* build packages are dependent on *cloverdrone* package build, which is in-turn dependent on *RTIMULib* build. As a result any changes made to the top of the hierarchy will only be reflected onto the lower builds when recompiled. This organization structure is pre-defined in the *CMake* files as well as the *build script*, which can be leveraged using arguments to the file. It should be noted that the ROS packages are only built if a valid installation of ROS is found in the system. Some examples are provided below:
+When making changes to the source files, the build script `source_to_build.sh`, provides arguments that can be passed to it to (re)build only parts of the project. In the project, *cloverdrone_ros* build packages are dependent on *cloverdrone* package build, which is in-turn dependent on *RTIMULib* build. As a result any changes made to the top of the hierarchy will only be reflected onto the lower builds when recompiled. This organization structure is pre-defined in the *CMake* files as well as the *build script*, which can be leveraged using arguments to the file. It should be noted that the ROS packages are only built if a valid installation of ROS is found in the system. Some examples are provided below:
  ```sh
  # Perform a clean build by erasing any previous build processes
  cd ~/CloverDrone
@@ -117,7 +117,18 @@ source cloverdrone_ros_ws/devel/setup.sh
  ```
 
 
- ### Changes
+### Changes
+ - removed the need for RTIMULib.ini file, and hard coded the desired values into the settings, declaring an overriding class. Check cloverdrone/src/sensors.cpp
+ - reorganized the config.ini structure completely
+ - the config file is now a config.ini file, which can also be parsed as an argument to the main program, if not it checks the CLOVERDRONEDIR env variable for a config.ini file
+ - the comm devices are now defined as a necessary parameter in the config file
+ - changed the configuration module to work with comments(#),spaces,tabs,empty lines etc. It now supports numeric values(int/float), flags(boolean true/false) and defines(string values) which is automatically detected and stored into corresponding maps. Access example: qConstants.flags["PARAM"]
+ - added parameters to class constructors to define the comm devices for peripherals (i2c,spi,serial), to be used in main
+ - changed to create a 'SHARED' library instead of a 'STATIC' library
+ - add '-j2' to catkin_make in the build script, since with more cores, npi doesnt have enough memory to compile everything simultaneously
+ - changes to udev rules to factor in nanopi, more generalized rules for non-sudo access, by assigning the current user group (NOTE: make sure the current user is a sudoer, check the file /etc/sudoers)
+ - add an option to configure the CLOVERDRONEDIR variable and ros workspace in the build script
+ - removed "#include <linux/i2c.h>" from "hardware_communication.cpp"
  - fixed pitch inversion
  - fixed default values for RC
  - fixed RC interface to read data from USB properly

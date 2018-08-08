@@ -2,19 +2,19 @@
 #include "utils.h"
 #include <math.h>
 
-Stabilize::Stabilize(int spawn_on_core, std::string imu_config_location) : is_running(true),compute_time(0),motor_time(0),arming_time(0),armed(false),
-    sense_time_limit(qConstants["TIME_TO_SENSE"]),
-    compute_time_limit(qConstants["TIME_TO_COMPUTE"]),
-    motor_time_limit(qConstants["TIME_TO_UPDATEMOTOR"]),
-    arming_time_limit(qConstants["TIME_TO_ARM"])
+Stabilize::Stabilize() : is_running(true),compute_time(0),motor_time(0),arming_time(0),armed(false),
+    sense_time_limit(qConstants.values["TIME_TO_SENSE"]),
+    compute_time_limit(qConstants.values["TIME_TO_COMPUTE"]),
+    motor_time_limit(qConstants.values["TIME_TO_UPDATEMOTOR"]),
+    arming_time_limit(qConstants.values["TIME_TO_ARM"])
 {
-	Sensor::initialize(&imu_config_location);
-	Actuator::initialize();
+	Sensor::initialize(qConstants.defines["IMU_DEVICE"]);
+	Actuator::initialize(qConstants.defines["PWM_DEVICE"]);
 	load_parameters();
-	quadController = new qControl(&vPhi, &vTheta, &vGamma, &vMotor, &imud, &vTarget, qConstants["I_THROTTLE_TRIGGER"], qConstants["PD_THROTTLE_TRIGGER"]);
+	quadController = new qControl(&vPhi, &vTheta, &vGamma, &vMotor, &imud, &vTarget, qConstants.values["I_THROTTLE_TRIGGER"], qConstants.values["PD_THROTTLE_TRIGGER"]);
 	Actuator::set_motors(vMotor.mMinBound, vMotor.mMinBound, vMotor.mMinBound, vMotor.mMinBound);
 	Actuator::motors_engage(true);
-  stabilizer_thread = std::thread(&Stabilize::stabilizer_routine,this,spawn_on_core);
+  stabilizer_thread = std::thread(&Stabilize::stabilizer_routine,this,qConstants.values["STABILITY_CONTROLLER_CORE"]);
   Utils::sleep(1000);
 }
 
@@ -32,18 +32,18 @@ void Stabilize::stop()
 
 void Stabilize::load_parameters()
 {
-  vPhi.KpBuffer = qConstants["ROLL_P"];
-	vPhi.KiBuffer = qConstants["ROLL_I"];
-	vPhi.KdBuffer = qConstants["ROLL_D"];
-	vPhi.KpAngular = qConstants["ROLL_PA"];
-	vTheta.KpBuffer = qConstants["PITCH_P"];
-	vTheta.KiBuffer = qConstants["PITCH_I"];
-	vTheta.KdBuffer = qConstants["PITCH_D"];
-	vTheta.KpAngular = qConstants["PITCH_PA"];
-	vGamma.KpBuffer = qConstants["YAW_P"];
-	vGamma.KiBuffer = qConstants["YAW_I"];
-	vGamma.KdBuffer = qConstants["YAW_D"];
-	vGamma.KpAngular = qConstants["YAW_PA"];
+  vPhi.KpBuffer = qConstants.values["ROLL_P"];
+	vPhi.KiBuffer = qConstants.values["ROLL_I"];
+	vPhi.KdBuffer = qConstants.values["ROLL_D"];
+	vPhi.KpAngular = qConstants.values["ROLL_PA"];
+	vTheta.KpBuffer = qConstants.values["PITCH_P"];
+	vTheta.KiBuffer = qConstants.values["PITCH_I"];
+	vTheta.KdBuffer = qConstants.values["PITCH_D"];
+	vTheta.KpAngular = qConstants.values["PITCH_PA"];
+	vGamma.KpBuffer = qConstants.values["YAW_P"];
+	vGamma.KiBuffer = qConstants.values["YAW_I"];
+	vGamma.KdBuffer = qConstants.values["YAW_D"];
+	vGamma.KpAngular = qConstants.values["YAW_PA"];
 }
 
 void Stabilize::arm(bool _arming)

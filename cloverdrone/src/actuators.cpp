@@ -7,9 +7,9 @@ static GPIO* motors_en;
 static GPIO* led_blue;
 static GPIO* led_amber;
 
-void Actuator::initialize(void)
+void Actuator::initialize(std::string device)
 {
-	motors = new PCA9685("/dev/i2c-1",0x40,50);
+	motors = new PCA9685(device,0x40,50);
 	motors_en = new GPIO(PWM_EN, OUT);
 	led_blue = new GPIO(BLUE, OUT);
 	led_amber = new GPIO(AMBER, OUT);

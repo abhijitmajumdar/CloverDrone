@@ -3,6 +3,7 @@
 
 #include "rc_interface.h"
 #include <cstdint>
+#include <iostream>
 
 typedef enum{
   RC=0,

@@ -13,7 +13,7 @@
 class Stabilize
 {
   public:
-		Stabilize(int, std::string);
+		Stabilize();
     ~Stabilize();
     bool running() { return this->is_running; }
     void stop();

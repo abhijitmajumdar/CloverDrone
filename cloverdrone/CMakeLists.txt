@@ -49,7 +49,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/ )
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/ )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/ )
 
-add_library(${PROJECT_NAME} STATIC ${CD_SOURCES})
+add_library(${PROJECT_NAME} SHARED ${CD_SOURCES})
 target_link_libraries(${PROJECT_NAME} ${CD_LIBS} )
 add_executable(${PROJECT_NAME}_flight  src/main.cpp)
 target_link_libraries(${PROJECT_NAME}_flight ${PROJECT_NAME} )
