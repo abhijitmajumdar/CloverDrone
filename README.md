@@ -118,6 +118,8 @@ When making changes to the source files, the build script `source_to_build.sh`, 
 
 
 ### Changes
+- added a timeout to pin setting, to ensure value is set(for example in case of arming)
+- fixed pin access with large numbers(>10) and added delay in initialization
 - separate configuration files for use on raspberry pi and nanopi duo
 - configurable access to pins to enable motor and status led
 - fixed rules file naming and sudo_user error in the script to configure non-root access

@@ -7,34 +7,30 @@ extern "C" {
 }
 #include <stdexcept>
 
-#define DIRECTION_MAX 35
-#define BUFFER_MAX 3
-#define VALUE_MAX 30
-
-GPIO::GPIO(int pin, pin_direction dir) : pin_number(pin),state(NA)
+GPIO::GPIO(int pin, pin_direction dir) : pin_number(pin),state(NA),timeout(10)
 {
-  int bytes_written;
-  char buffer[BUFFER_MAX];
-  char path[DIRECTION_MAX];
+  sprintf(path_export, "/sys/class/gpio/export");
+  sprintf(path_unexport, "/sys/class/gpio/unexport");
+  snprintf(path_direction, PATH_MAX, "/sys/class/gpio/gpio%d/direction", pin_number);
+  snprintf(path_value, PATH_MAX, "/sys/class/gpio/gpio%d/value", pin_number);
   bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin_number);
-  snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d/direction", pin_number);
-  fd = open("/sys/class/gpio/export", O_WRONLY);
-  if (fd==-1) report_error("Could not open access to pin");
+  // Export pin
+  fd = open(path_export, O_WRONLY);
+  if (fd==-1) report_error("Could not export pin");
   write(fd, buffer, bytes_written);
   close(fd);
-  usleep(100000);
-  fd = open(path, O_WRONLY);
-  if (fd==-1) report_error("Could not open access to pin");
+  usleep(500000);
+  // Set direction of pin
+  fd = open(path_direction, O_WRONLY);
+  if (fd==-1) report_error("Could not open direction access to pin");
   write(fd, &s_directions_str[IN == dir ? 0 : 3], IN == dir ? 2 : 3);
   close(fd);
+  usleep(500000);
 }
 
 GPIO::~GPIO()
 {
-  int bytes_written;
-  char buffer[BUFFER_MAX];
-  bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin_number);
-  fd = open("/sys/class/gpio/unexport", O_WRONLY);
+  fd = open(path_unexport, O_WRONLY);
   if (fd==-1) return;
   write(fd, buffer, bytes_written);
   close(fd);
@@ -42,15 +38,19 @@ GPIO::~GPIO()
 
 bool GPIO::set(bool value)
 {
-  return set(value?HIGH:LOW);
+  int _timeout = timeout;
+  do{
+    if(set(value?HIGH:LOW)) break;
+    std::cout<<"\nWarning: retrying pin value access\n";
+    usleep(1000);
+  } while(_timeout--);
+  return _timeout>0;
 }
 
 bool GPIO::set(pin_state value)
 {
   if (value==state) return true;
-  char path[VALUE_MAX];
-  snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin_number);
-  fd = open(path, O_WRONLY);
+  fd = open(path_value, O_WRONLY);
   if (fd==-1) return false;
   write(fd, &s_values_str[LOW == value ? 0 : 1], 1);
   close(fd);
